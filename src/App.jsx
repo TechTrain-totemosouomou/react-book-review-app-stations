@@ -43,9 +43,9 @@ function App() {
         {error && <div className="error-message">{error}</div>} {/* エラーメッセージを表示 */}
         <form className="login-form" onSubmit={handleSubmit}>
           <label htmlFor="email">Email</label>
-          <input name="email" type="email" id="email" placeholder="example@email.com" />
+          <input name="email" type="email" id="email" placeholder="example@email.com" required />
           <label htmlFor="password">Password</label>
-          <input name="password" type="password" id="password" />
+          <input name="password" type="password" id="password" required />
           <button type="submit">Login</button>
         </form>
       </header>
