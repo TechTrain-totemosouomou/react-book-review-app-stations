@@ -1,42 +1,52 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+.App {
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.App-header {
+  background-color: #282c34;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+h1, p {
+  margin: 0;
+  text-align: left;
 }
 
-.card {
-  padding: 2em;
+.login-form {
+  margin: 20px;
+  text-align: left;
 }
 
-.read-the-docs {
-  color: #888;
+.login-form input[type="email"],
+.login-form input[type="password"] {
+  height: 2.5rem;
+  margin-bottom: 20px;
+
+  width: 100%;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  padding-left: 12px;
+  padding-right: 12px;
+  background-color: rgba(200, 235, 235, 0.2);
+  font-size: 14px;
+  color: azure;
+}
+
+.login-form input[type="email"]::placeholder {
+  color: #ddd;
+}
+
+.login-form button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #61dafb;
+  border: none;
+  cursor: pointer;
 }
