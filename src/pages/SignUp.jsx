@@ -1,21 +1,44 @@
 import React, { useState } from 'react';
 import Header from '../components/Header.jsx';
 import Compressor from 'compressorjs';
+import { Formik, Field, Form, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 import './SignUp.css';
 
-function SignUp() {
-  const [error, setError] = useState('');
+const SignUp = () => {
   const [step, setStep] = useState(1);
   const [token, setToken] = useState('');
+  const [error, setError] = useState('');
 
-  async function handleSubmit(event) {
-    event.preventDefault();
+  const initialValuesStep1 = {
+    email: '',
+    name: '',
+    password: ''
+  };
+
+  const validationSchemaStep1 = Yup.object({
+    email: Yup.string()
+      .email('Invalid email address')
+      .matches(
+        // RFC 5322に基づく正規表現
+        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        'Invalid email address'
+      )
+      .required('Required'),
+    name: Yup.string().required('Required'),
+    password: Yup.string().min(6, 'Password must be at least 6 characters').required('Required')
+  });
+
+  const initialValuesStep2 = {
+    file: null
+  };
+
+  const validationSchemaStep2 = Yup.object({
+    file: Yup.mixed().required('File is required')
+  });
+
+  const handleStep1Submit = async (values, { setSubmitting }) => {
     setError('');
-
-    const formData = new FormData(event.target);
-    const email = formData.get('email');
-    const name = formData.get('name');
-    const password = formData.get('password');
 
     try {
       const response = await fetch('https://railway.bookreview.techtrain.dev/users', {
@@ -23,7 +46,7 @@ function SignUp() {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ name, email, password })
+        body: JSON.stringify(values)
       });
 
       if (!response.ok) {
@@ -34,18 +57,17 @@ function SignUp() {
       const data = await response.json();
       setToken(data.token);
       setStep(2);
-
     } catch (error) {
-      console.error('Error signing up:', error.message);
       setError(error.message);
     }
-  }
 
-  async function handleFileUpload(event) {
-    event.preventDefault();
+    setSubmitting(false);
+  };
+
+  const handleStep2Submit = async (values, { setSubmitting }) => {
     setError('');
 
-    new Compressor(file, {
+    new Compressor(values.file, {
       quality: 0.6,
       success(compressedFile) {
         const formData = new FormData();
@@ -76,7 +98,9 @@ function SignUp() {
         setError(err.message);
       },
     });
-  }
+
+    setSubmitting(false);
+  };
 
   return (
     <div className="App">
@@ -86,27 +110,52 @@ function SignUp() {
           <>
             <h2>SIGN-UP 1/2</h2>
             <p>Create your account by entering your email, name, and password.</p>
-            {error && <div className="error-message">{error}</div>} {/* エラーメッセージを表示 */}
-            <form className="signup-form" onSubmit={handleSubmit}>
-              <label htmlFor="email">Email</label>
-              <input name="email" type="email" id="email" placeholder="example@email.com" required />
-              <label htmlFor="name">Name</label>
-              <input name="name" type="text" id="name" placeholder="Your Name" required />
-              <label htmlFor="password">Password</label>
-              <input name="password" type="password" id="password" required />
-              <button type="submit">Next</button>
-            </form>
+            {error && <div className="error-message">{error}</div>}
+            <Formik
+              initialValues={initialValuesStep1}
+              validationSchema={validationSchemaStep1}
+              onSubmit={handleStep1Submit}
+            >
+              {({ isSubmitting }) => (
+                <Form className="signup-form">
+                  <label htmlFor="email">Email</label>
+                  <ErrorMessage name="email" component="div" className="error-message" />
+                  <Field name="email" type="email" id="email" placeholder="example@email.com" />
+                  <label htmlFor="name">Name</label>
+                  <ErrorMessage name="name" component="div" className="error-message" />
+                  <Field name="name" type="text" id="name" placeholder="Your Name" />
+                  <label htmlFor="password">Password</label>
+                  <ErrorMessage name="password" component="div" className="error-message" />
+                  <Field name="password" type="password" id="password" />
+                  <button type="submit" disabled={isSubmitting}>Next</button>
+                </Form>
+              )}
+            </Formik>
           </>
         ) : (
           <>
             <h2>SIGN-UP 2/2</h2>
             <p>Upload an icon image to complete your sign up.</p>
-            {error && <div className="error-message">{error}</div>} {/* エラーメッセージを表示 */}
-            <form className="file-upload-form" onSubmit={handleFileUpload}>
-              <label htmlFor="file">File</label>
-              <input name="file" type="file" id="file" onChange={(e) => setFile(e.target.files[0])} required />
-              <button type="submit">Upload File</button>
-            </form>
+            {error && <div className="error-message">{error}</div>}
+            <Formik
+              initialValues={initialValuesStep2}
+              validationSchema={validationSchemaStep2}
+              onSubmit={handleStep2Submit}
+            >
+              {({ setFieldValue, isSubmitting }) => (
+                <Form className="file-upload-form">
+                  <label htmlFor="file">File</label>
+                  <input
+                    name="file"
+                    type="file"
+                    id="file"
+                    onChange={(event) => setFieldValue("file", event.currentTarget.files[0])}
+                  />
+                  <ErrorMessage name="file" component="div" className="error-message" />
+                  <button type="submit" disabled={isSubmitting}>Upload File</button>
+                </Form>
+              )}
+            </Formik>
           </>
         )}
       </header>
