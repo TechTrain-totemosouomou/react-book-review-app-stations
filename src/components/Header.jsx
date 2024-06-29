@@ -6,9 +6,8 @@ function Header() {
 
   return (
     <header className="header">
-      <h1>Book Review</h1>
       <p>
-        <Link to="/login">LOG-IN</Link>：<Link to="/signup">SIGN-UP</Link>
+        <Link to="/">Book Review</Link>：<Link to="/login">LOG-IN</Link>：<Link to="/signup">SIGN-UP</Link>
       </p>
     </header>
   )
