@@ -14,7 +14,8 @@
   color: white;
 }
 
-h1, p {
+h1,
+p {
   margin: 0;
   text-align: left;
 }
@@ -24,8 +25,8 @@ h1, p {
   text-align: left;
 }
 
-.login-form input[type="email"],
-.login-form input[type="password"] {
+.login-form input[type='email'],
+.login-form input[type='password'] {
   height: 2.5rem;
   margin-bottom: 20px;
 
@@ -39,7 +40,7 @@ h1, p {
   color: azure;
 }
 
-.login-form input[type="email"]::placeholder {
+.login-form input[type='email']::placeholder {
   color: #ddd;
 }
 
