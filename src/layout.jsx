@@ -50,7 +50,7 @@ const Layout = () => {
 
   return (
     <div>
-      <Header userName={userName} />
+      <Header userName={userName} setUserName={setUserName} />
       <main>
         <Outlet />
       </main>
