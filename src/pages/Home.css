@@ -1,56 +1,32 @@
-.App {
-  text-align: center;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-.App-header {
-  background-color: #282c34;
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
+@home base {
+  :root {
+    --background: 210 29% 20%; /* HSL equivalent of #282c34 */
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 45%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
+    --radius: 0.5rem;
+  }
 
-h1, p {
-  margin: 0;
-  text-align: left;
-}
-
-.login-form {
-  margin: 20px;
-  text-align: left;
-  max-width: 50%;
-}
-
-.login-form input[type="email"],
-.login-form input[type="password"] {
-  height: 2.5rem;
-  margin-bottom: 20px;
-  width: 100%;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-  padding-left: 12px;
-  padding-right: 12px;
-  background-color: rgba(200, 235, 235, 0.2);
-  font-size: 14px;
-  color: azure;
-}
-
-.login-form button {
-  margin-top: 10px;
-  padding: 12px 24px;
-  background-color: #4da5e0;
-  border: none;
-  border-radius: 8px;
-  color: azure;
-  font-size: 18px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.login-form button:hover {
-  background-color: #4da5e0c2;
+  body {
+    @apply bg-background text-foreground;
+  }
 }

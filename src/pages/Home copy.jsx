@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import Cookies from 'js-cookie'
 
-export default function Home() {
+export default function Component() {
   const [books, setBooks] = useState([])
   const [offset, setOffset] = useState(0)
   const [error, setError] = useState('')
-  const [userName, setUserName] = useState('')
-  const [userIconUrl, setUserIconUrl] = useState('')
 
   useEffect(() => {
     fetchBooks(offset) // 初回読み込み時にoffsetを指定してデータを取得
-    checkLoginState() // ログイン状態を確認
   }, [offset])
 
   const fetchBooks = async (newOffset) => {
@@ -32,40 +28,6 @@ export default function Home() {
     }
   }
 
-  const checkLoginState = async () => {
-    try {
-      const authToken = Cookies.get('authToken')
-      if (!authToken) {
-        throw new Error('認証トークンが見つかりません')
-      }
-
-      const response = await fetch(
-        'https://railway.bookreview.techtrain.dev/users',
-        {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        }
-      )
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(
-          errorData.ErrorMessageJP || 'Network response was not ok'
-        )
-      }
-
-      const userData = await response.json()
-      setUserName(userData.name) // ユーザー名を保存
-      setUserIconUrl(userData.iconUrl) // ユーザーアイコンURLを保存
-      console.log('ユーザー名:', userData.name)
-      console.log('ユーザーアイコンURL:', userData.iconUrl)
-    } catch (error) {
-      console.error('ログイン状態の確認エラー:', error.message)
-    }
-  }
-
   const showPreviousButton = offset > 0
   const showNextButton = books.length === 10
 
@@ -73,9 +35,8 @@ export default function Home() {
     <div className="App">
       <div className="max-w-6xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <h1 className="text-3xl font-bold mb-6">Books</h1>
-
-        {error && <div className="error-message">{error}</div>}
-
+        {error && <div className="error-message">{error}</div>}{' '}
+        {/* エラーメッセージを表示 */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {books.map((book) => (
             <div
@@ -98,22 +59,7 @@ export default function Home() {
             </div>
           ))}
         </div>
-
-        <div className="user-info">
-          {userName && (
-            <div>
-              <p>ユーザー名: {userName}</p>
-            </div>
-          )}
-          {userIconUrl && (
-            <div>
-              <p>ユーザーアイコンURL: {userIconUrl}</p>
-              <img src={userIconUrl} alt="User Icon" />
-            </div>
-          )}
-        </div>
       </div>
-
       {showPreviousButton && (
         <button className="page" onClick={() => setOffset(offset - 10)}>
           前の10件
