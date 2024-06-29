@@ -6,6 +6,7 @@ import Layout from './layout'
 import Home from './pages/Home'
 import LogIn from './pages/LogIn'
 import SignUp from './pages/SignUp'
+import Profile from './pages/Profile'
 import { NotFound } from './pages/NotFound'
 import './index.css'
 
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: 'signup',
         element: <SignUp />,
+      },
+      {
+        path: 'profile',
+        element: <Profile />,
       },
       {
         path: '*',

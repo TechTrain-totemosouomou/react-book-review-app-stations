@@ -15,9 +15,21 @@ function Header({ userName }) {
 
   return (
     <header className="header">
-      <p>
+      <p className='flex'>
         <Link to="/">Book Review</Link>：{renderLink()}
-        {userName && <span>ようこそ、{userName}さん</span>}
+        {userName && (
+          <span className='flex'>
+            ようこそ、
+            <Link to="/profile" className="user-link">
+              {userName}
+              <img
+                src="/icon-profile.svg"
+                alt="Profile"
+                className="user-icon"
+              />
+            </Link>
+          </span>
+        )}
       </p>
     </header>
   )
