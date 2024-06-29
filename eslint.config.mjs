@@ -1,3 +1,4 @@
+// eslint.config.mjs
 import reactPlugin from 'eslint-plugin-react'
 import hooksPlugin from 'eslint-plugin-react-hooks'
 
@@ -22,6 +23,12 @@ export default [
     },
   },
   {
-    ignores: ['./.vscode/*', './node_modules/*', './public/*'],
+    ignores: [
+      './.vscode/*',
+      './node_modules/*',
+      './public/*',
+      '**/*.test.js',
+      '**/*.test.jsx',
+    ],
   },
 ]
