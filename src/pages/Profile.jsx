@@ -1,92 +1,102 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
-import Compressor from 'compressorjs';
-import { Formik, Field, Form, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
-import './SignUp.css';
+import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import Cookies from 'js-cookie'
+import Compressor from 'compressorjs'
+import { Formik, Field, Form, ErrorMessage } from 'formik'
+import * as Yup from 'yup'
+import './SignUp.css'
 
 const Profile = () => {
-  const [step, setStep] = useState(1);
-  const [error, setError] = useState('');
-  const [userData, setUserData] = useState({ name: '', iconUrl: '' });
-  const navigate = useNavigate();
+  const [step, setStep] = useState(1)
+  const [error, setError] = useState('')
+  const [userData, setUserData] = useState({ name: '', iconUrl: '' })
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const authToken = Cookies.get('authToken');
+        const authToken = Cookies.get('authToken')
         if (!authToken) {
-          throw new Error('認証トークンが見つかりません');
+          throw new Error('認証トークンが見つかりません')
         }
 
-        const response = await fetch('https://railway.bookreview.techtrain.dev/users', {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        });
+        const response = await fetch(
+          'https://railway.bookreview.techtrain.dev/users',
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        )
 
         if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.ErrorMessageJP || 'Network response was not ok');
+          const errorData = await response.json()
+          throw new Error(
+            errorData.ErrorMessageJP || 'Network response was not ok'
+          )
         }
 
-        const data = await response.json();
-        setUserData(data);
+        const data = await response.json()
+        setUserData(data)
       } catch (error) {
-        setError(error.message);
+        setError(error.message)
       }
-    };
+    }
 
-    fetchUserData();
-  }, []);
+    fetchUserData()
+  }, [])
 
   const validationSchemaStep1 = Yup.object({
     name: Yup.string().required('Required'),
-  });
+  })
 
   const validationSchemaStep2 = Yup.object({
     file: Yup.mixed().required('File is required'),
-  });
+  })
 
   const handleStep1Submit = async (values, { setSubmitting }) => {
-    setError('');
+    setError('')
 
     try {
-      const authToken = Cookies.get('authToken');
-      const response = await fetch('https://railway.bookreview.techtrain.dev/users', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify({ name: values.name }),
-      });
+      const authToken = Cookies.get('authToken')
+      const response = await fetch(
+        'https://railway.bookreview.techtrain.dev/users',
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({ name: values.name }),
+        }
+      )
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.ErrorMessageJP || 'Network response was not ok');
+        const errorData = await response.json()
+        throw new Error(
+          errorData.ErrorMessageJP || 'Network response was not ok'
+        )
       }
 
-      setStep(2);
+      setStep(2)
     } catch (error) {
-      setError(error.message);
+      setError(error.message)
     }
 
-    setSubmitting(false);
-  };
+    setSubmitting(false)
+  }
 
   const handleStep2Submit = async (values, { setSubmitting }) => {
-    setError('');
+    setError('')
 
     new Compressor(values.file, {
       quality: 0.6,
       success(compressedFile) {
-        const formData = new FormData();
-        formData.append('icon', compressedFile);
+        const formData = new FormData()
+        formData.append('icon', compressedFile)
 
-        const authToken = Cookies.get('authToken');
+        const authToken = Cookies.get('authToken')
 
         fetch('https://railway.bookreview.techtrain.dev/uploads', {
           method: 'POST',
@@ -98,25 +108,27 @@ const Profile = () => {
           .then((response) => {
             if (!response.ok) {
               return response.json().then((errorData) => {
-                throw new Error(errorData.ErrorMessageJP || 'Network response was not ok');
-              });
+                throw new Error(
+                  errorData.ErrorMessageJP || 'Network response was not ok'
+                )
+              })
             }
-            console.log('File upload successful!');
-            navigate('/');
+            console.log('File upload successful!')
+            navigate('/')
           })
           .catch((error) => {
-            console.error('Error uploading file:', error.message);
-            setError(error.message);
-          });
+            console.error('Error uploading file:', error.message)
+            setError(error.message)
+          })
       },
       error(err) {
-        console.error('Error compressing file:', err.message);
-        setError(err.message);
+        console.error('Error compressing file:', err.message)
+        setError(err.message)
       },
-    });
+    })
 
-    setSubmitting(false);
-  };
+    setSubmitting(false)
+  }
 
   return (
     <div className="App">
@@ -139,8 +151,17 @@ const Profile = () => {
               {({ isSubmitting }) => (
                 <Form className="signup-form">
                   <label htmlFor="name">Name</label>
-                  <ErrorMessage name="name" component="div" className="error-message" />
-                  <Field name="name" type="text" id="name" placeholder="Your Name" />
+                  <ErrorMessage
+                    name="name"
+                    component="div"
+                    className="error-message"
+                  />
+                  <Field
+                    name="name"
+                    type="text"
+                    id="name"
+                    placeholder="Your Name"
+                  />
                   <button type="submit" disabled={isSubmitting}>
                     Next
                   </button>
@@ -171,9 +192,15 @@ const Profile = () => {
                     name="file"
                     type="file"
                     id="file"
-                    onChange={(event) => setFieldValue('file', event.currentTarget.files[0])}
+                    onChange={(event) =>
+                      setFieldValue('file', event.currentTarget.files[0])
+                    }
                   />
-                  <ErrorMessage name="file" component="div" className="error-message" />
+                  <ErrorMessage
+                    name="file"
+                    component="div"
+                    className="error-message"
+                  />
                   <button type="submit" disabled={isSubmitting}>
                     Upload File
                   </button>
@@ -184,7 +211,7 @@ const Profile = () => {
         </>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default Profile;
+export default Profile
