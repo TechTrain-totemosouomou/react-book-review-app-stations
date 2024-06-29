@@ -19,17 +19,14 @@ p {
   text-align: left;
 }
 
-.signup-form,
-.file-upload-form {
+.login-form {
   margin: 20px;
   text-align: left;
   max-width: 50%;
 }
 
-.signup-form input[type='email'],
-.signup-form input[type='text'],
-.signup-form input[type='password'],
-.file-upload-form input[type='file'] {
+.login-form input[type='email'],
+.login-form input[type='password'] {
   height: 2.5rem;
   margin-bottom: 20px;
   width: 100%;
@@ -42,13 +39,7 @@ p {
   color: azure;
 }
 
-.file-upload-form input[type='file'] {
-  padding-top: 4px;
-  font-size: 20px;
-}
-
-.signup-form button,
-.file-upload-form button {
+.login-form button {
   margin-top: 10px;
   padding: 12px 24px;
   background-color: #4da5e0;
@@ -60,7 +51,6 @@ p {
   transition: background-color 0.3s;
 }
 
-.signup-form button:hover,
-.file-upload-form button:hover {
+.login-form button:hover {
   background-color: #4da5e0c2;
 }
