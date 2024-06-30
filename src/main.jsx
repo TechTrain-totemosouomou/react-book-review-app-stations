@@ -7,6 +7,7 @@ import Home from './pages/Home'
 import LogIn from './pages/LogIn'
 import SignUp from './pages/SignUp'
 import Profile from './pages/Profile'
+import New from './pages/New'
 import { NotFound } from './pages/NotFound'
 import './index.css'
 
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: 'profile',
         element: <Profile />,
+      },
+      {
+        path: 'new',
+        element: <New />,
       },
       {
         path: '*',

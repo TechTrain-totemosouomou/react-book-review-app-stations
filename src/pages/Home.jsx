@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Pagination from '../components/Pagination'
 import { useAuth } from '../AuthContext.jsx' // useAuth フックをインポートする
 import Cookies from 'js-cookie'
@@ -8,6 +9,7 @@ export default function Home() {
   const [offset, setOffset] = useState(0)
   const [error, setError] = useState('')
   const { fetchUserData, userName, iconUrl } = useAuth()
+  const navigate = useNavigate()
 
   useEffect(() => {
     const authToken = Cookies.get('authToken')
@@ -37,6 +39,10 @@ export default function Home() {
       console.error('Error fetching books:', error.message)
       setError(error.message)
     }
+  }
+
+  const handleClick = () => {
+    navigate('/new')
   }
 
   return (
@@ -79,7 +85,10 @@ export default function Home() {
               />
             </div>
           )}
-          <button className="bg-pink-50 bg-opacity-80 shadow-md rounded-lg overflow-hidden transition-shadow duration-300 ease-in-out hover:shadow-lg">
+          <button
+            onClick={handleClick}
+            className="bg-pink-50 bg-opacity-80 shadow-md rounded-lg overflow-hidden transition-shadow duration-300 ease-in-out hover:shadow-lg"
+          >
             <div className="text-2xl font-bold border-b border-gray-300 w-60 mx-auto">
               Create New Review
             </div>
