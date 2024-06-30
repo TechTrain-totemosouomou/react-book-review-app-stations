@@ -8,6 +8,7 @@ import LogIn from './pages/LogIn'
 import SignUp from './pages/SignUp'
 import Profile from './pages/Profile'
 import New from './pages/New'
+import Detail from './pages/Detail'
 import { NotFound } from './pages/NotFound'
 import './index.css'
 
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
         element: <New />,
       },
       {
+        path: 'detail/:id',
+        element: <Detail />,
+      },
+      {
         path: '*',
         element: <NotFound />,
       },
@@ -45,6 +50,7 @@ const router = createBrowserRouter([
 ])
 
 ReactDOM.createRoot(document.getElementById('root')).render(
+  // 2回描画の原因
   <React.StrictMode>
     <RouterProvider router={router} />
   </React.StrictMode>

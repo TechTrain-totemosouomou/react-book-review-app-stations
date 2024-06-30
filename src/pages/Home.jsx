@@ -1,3 +1,4 @@
+// Home.jsx
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Pagination from '../components/Pagination'
@@ -41,6 +42,10 @@ export default function Home() {
     }
   }
 
+  const handleReviewClick = (book) => {
+    navigate('/detail/' + book.id)
+  }
+
   const handleClick = () => {
     navigate('/new')
   }
@@ -57,9 +62,10 @@ export default function Home() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {books.map((book) => (
-            <div
+            <button
               key={book.id}
               className="bg-white shadow-md rounded-lg overflow-hidden transition-shadow duration-300 ease-in-out hover:shadow-lg"
+              onClick={() => handleReviewClick(book)}
             >
               <div className="p-4">
                 <h2 className="text-lg font-medium mb-2">{book.title}</h2>
@@ -74,7 +80,7 @@ export default function Home() {
                   "{book.review}" - {book.reviewer}
                 </p>
               </div>
-            </div>
+            </button>
           ))}
           {iconUrl && (
             <div className="bg-white shadow-md rounded-lg overflow-hidden transition-shadow duration-300 ease-in-out hover:shadow-lg">
