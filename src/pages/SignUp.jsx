@@ -1,15 +1,17 @@
+// SignUp.jsx
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import Compressor from 'compressorjs'
 import { Formik, Field, Form, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
-import './SignUp.css'
+import { useAuth } from '../AuthContext.jsx'
 
 const SignUp = () => {
   const [step, setStep] = useState(1)
   const [error, setError] = useState('')
   const navigate = useNavigate()
+  const { setUserName } = useAuth()
 
   const initialValuesStep1 = {
     email: '',
@@ -21,7 +23,6 @@ const SignUp = () => {
     email: Yup.string()
       .email('Invalid email address')
       .matches(
-        // RFC 5322に基づく正規表現
         /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         'Invalid email address'
       )
@@ -64,6 +65,7 @@ const SignUp = () => {
 
       const data = await response.json()
       Cookies.set('authToken', data.token)
+      setUserName(values.name)
       setStep(2)
     } catch (error) {
       setError(error.message)

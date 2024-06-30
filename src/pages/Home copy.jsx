@@ -1,24 +1,17 @@
 import React, { useEffect, useState } from 'react'
-import Pagination from '../components/Pagination'
-import { useAuth } from '../AuthContext.jsx' // useAuth フックをインポートする
 import Cookies from 'js-cookie'
+import Pagination from '../components/Pagination'
 
 export default function Home() {
   const [books, setBooks] = useState([])
   const [offset, setOffset] = useState(0)
   const [error, setError] = useState('')
-  const { fetchUserData, userName, iconUrl } = useAuth()
+  const [userIconUrl, setUserIconUrl] = useState('')
 
   useEffect(() => {
-    const authToken = Cookies.get('authToken')
-    if (!authToken) {
-      setError('認証トークンが見つかりません')
-      return
-    }
-
-    fetchUserData(authToken)
-    fetchBooks(offset)
-  }, [offset, userName, iconUrl])
+    fetchBooks(offset) // 初回読み込み時にoffsetを指定してデータを取得
+    checkLoginState() // ログイン状態を確認
+  }, [offset])
 
   const fetchBooks = async (newOffset) => {
     try {
@@ -36,6 +29,37 @@ export default function Home() {
     } catch (error) {
       console.error('Error fetching books:', error.message)
       setError(error.message)
+    }
+  }
+
+  const checkLoginState = async () => {
+    try {
+      const authToken = Cookies.get('authToken')
+      if (!authToken) {
+        throw new Error('認証トークンが見つかりません')
+      }
+
+      const response = await fetch(
+        'https://railway.bookreview.techtrain.dev/users',
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      )
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(
+          errorData.ErrorMessageJP || 'Network response was not ok'
+        )
+      }
+
+      const userData = await response.json()
+      setUserIconUrl(userData.iconUrl) // ユーザーアイコンURLを保存
+    } catch (error) {
+      console.error('ログイン状態の確認エラー:', error.message)
     }
   }
 
@@ -70,10 +94,10 @@ export default function Home() {
               </div>
             </div>
           ))}
-          {iconUrl && (
+          {userIconUrl && (
             <div className="bg-white shadow-md rounded-lg overflow-hidden transition-shadow duration-300 ease-in-out hover:shadow-lg">
               <img
-                src={iconUrl}
+                src={userIconUrl}
                 alt="User Icon"
                 style={{ maxHeight: '500px' }}
               />

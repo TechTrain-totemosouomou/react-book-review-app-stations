@@ -1,17 +1,51 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import Compressor from 'compressorjs'
 import { Formik, Field, Form, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
-import { useAuth } from '../AuthContext.jsx' // useAuth フックをインポートする
 import './SignUp.css'
 
 const Profile = () => {
   const [step, setStep] = useState(1)
   const [error, setError] = useState('')
-  const { userName, setUserName } = useAuth() // useAuth から userName と setUserName を取得
+  const [userData, setUserData] = useState({ name: '', iconUrl: '' })
   const navigate = useNavigate()
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const authToken = Cookies.get('authToken')
+        if (!authToken) {
+          throw new Error('認証トークンが見つかりません')
+        }
+
+        const response = await fetch(
+          'https://railway.bookreview.techtrain.dev/users',
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        )
+
+        if (!response.ok) {
+          const errorData = await response.json()
+          throw new Error(
+            errorData.ErrorMessageJP || 'Network response was not ok'
+          )
+        }
+
+        const data = await response.json()
+        setUserData(data)
+      } catch (error) {
+        setError(error.message)
+      }
+    }
+
+    fetchUserData()
+  }, [])
 
   const validationSchemaStep1 = Yup.object({
     name: Yup.string().required('Required'),
@@ -45,7 +79,6 @@ const Profile = () => {
         )
       }
 
-      setUserName(values.name)
       setStep(2)
     } catch (error) {
       setError(error.message)
@@ -80,7 +113,6 @@ const Profile = () => {
                 )
               })
             }
-
             console.log('File upload successful!')
             navigate('/')
           })
@@ -111,7 +143,7 @@ const Profile = () => {
             {error && <div className="error-message">{error}</div>}
 
             <Formik
-              initialValues={{ name: userName }}
+              initialValues={{ name: userData.name }}
               validationSchema={validationSchemaStep1}
               onSubmit={handleStep1Submit}
               enableReinitialize
