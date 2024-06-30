@@ -45,7 +45,7 @@ function LogIn() {
       }
 
       const data = await response.json()
-      const authToken = data.token
+      const authToken = data.token // APIのレスポンスからトークンを取得
       Cookies.set('authToken', authToken, { expires: 1 }) // 有効期限24時間
       console.log('Login successful!')
       navigate('/')

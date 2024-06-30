@@ -1,13 +1,37 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useLocation, Link, useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
-import { useAuth } from '../AuthContext' // コンテキストをインポート
 import './Header.css'
 
-function Header() {
+function Header({ userName, setUserName }) {
   const location = useLocation()
   const navigate = useNavigate()
-  const { userName, setUserName } = useAuth() // コンテキストから取得
+
+  useEffect(() => {
+    const authToken = Cookies.get('authToken')
+    if (authToken) {
+      fetch('https://railway.bookreview.techtrain.dev/users', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok')
+          }
+          return response.json()
+        })
+        .then((data) => {
+          setUserName(data.name)
+        })
+        .catch((error) => {
+          console.error('Error fetching user data:', error)
+        })
+    } else {
+      setUserName('') // 認証トークンがない場合はユーザー名を空に
+    }
+  }, [location, setUserName])
 
   const renderLink = () => {
     if (location.pathname === '/login') {
