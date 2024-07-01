@@ -1,3 +1,4 @@
+// Header.jsx
 import React from 'react'
 import { useLocation, Link, useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie'

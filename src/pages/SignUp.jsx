@@ -1,11 +1,12 @@
 // SignUp.jsx
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import Compressor from 'compressorjs'
 import { Formik, Field, Form, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import { useAuth } from '../AuthContext.jsx'
+import '../styles/forms.scss'
 
 const SignUp = () => {
   const [step, setStep] = useState(1)
@@ -23,6 +24,7 @@ const SignUp = () => {
     email: Yup.string()
       .email('Invalid email address')
       .matches(
+        // RFC 5322に基づく正規表現
         /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         'Invalid email address'
       )
@@ -100,7 +102,7 @@ const SignUp = () => {
                 )
               })
             }
-            console.log('File upload successful!')
+            console.log('File Upload successful!')
             navigate('/')
           })
           .catch((error) => {
@@ -118,102 +120,118 @@ const SignUp = () => {
   }
 
   return (
-    <div className="App">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+      onClick={() => navigate('/')}
+    >
       {step === 1 ? (
         <>
-          <div className="App-header">
-            <h2>SIGN-UP 1/2</h2>
-          </div>
-          <div className="App-content">
-            <p>
-              Create your account by entering your email, name, and password.
-            </p>
+          <div
+            className="ml-24 mr-0 w-full max-w-6xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="grid md:grid-cols-2 gap-6">
+              <h2>SIGN-UP 1/2</h2>
+            </div>
+            <div className="App-content">
+              <p>
+                Create your account by entering your email, name, and password.
+              </p>
 
-            {error && <div className="error-message">{error}</div>}
+              {error && <div className="error-message">{error}</div>}
 
-            <Formik
-              initialValues={initialValuesStep1}
-              validationSchema={validationSchemaStep1}
-              onSubmit={handleStep1Submit}
-            >
-              {({ isSubmitting }) => (
-                <Form className="signup-form">
-                  <label htmlFor="email">Email</label>
-                  <ErrorMessage
-                    name="email"
-                    component="div"
-                    className="error-message"
-                  />
-                  <Field
-                    name="email"
-                    type="email"
-                    id="email"
-                    placeholder="example@email.com"
-                  />
-                  <label htmlFor="name">Name</label>
-                  <ErrorMessage
-                    name="name"
-                    component="div"
-                    className="error-message"
-                  />
-                  <Field
-                    name="name"
-                    type="text"
-                    id="name"
-                    placeholder="Your Name"
-                  />
-                  <label htmlFor="password">Password</label>
-                  <ErrorMessage
-                    name="password"
-                    component="div"
-                    className="error-message"
-                  />
-                  <Field name="password" type="password" id="password" />
-                  <button type="submit" disabled={isSubmitting}>
-                    Next
-                  </button>
-                </Form>
-              )}
-            </Formik>
+              <Formik
+                initialValues={initialValuesStep1}
+                validationSchema={validationSchemaStep1}
+                onSubmit={handleStep1Submit}
+              >
+                {({ isSubmitting }) => (
+                  <Form className="signup-form">
+                    <label htmlFor="email">Email</label>
+                    <ErrorMessage
+                      name="email"
+                      component="div"
+                      className="error-message"
+                    />
+                    <Field
+                      name="email"
+                      type="email"
+                      id="email"
+                      placeholder="example@email.com"
+                    />
+                    <label htmlFor="name">Name</label>
+                    <ErrorMessage
+                      name="name"
+                      component="div"
+                      className="error-message"
+                    />
+                    <Field
+                      name="name"
+                      type="text"
+                      id="name"
+                      placeholder="Your Name"
+                    />
+                    <label htmlFor="password">Password</label>
+                    <ErrorMessage
+                      name="password"
+                      component="div"
+                      className="error-message"
+                    />
+                    <Field name="password" type="password" id="password" />
+                    <button type="submit" disabled={isSubmitting}>
+                      Next
+                    </button>
+                    <span className="ml-10">
+                      Login <Link to="/login">here</Link>
+                    </span>
+                  </Form>
+                )}
+              </Formik>
+            </div>
           </div>
         </>
       ) : (
         <>
-          <div className="App-header">
-            <h2>SIGN-UP 2/2</h2>
-          </div>
-          <div className="App-content">
-            <p>Upload an icon image to complete your sign up.</p>
+          <div
+            className="ml-24 mr-0 w-full max-w-6xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="grid md:grid-cols-2 gap-6">
+              <h2>SIGN-UP 2/2</h2>
+            </div>
+            <div className="App-content">
+              <p>Upload an icon image to complete your sign up.</p>
 
-            {error && <div className="error-message">{error}</div>}
+              {error && <div className="error-message">{error}</div>}
 
-            <Formik
-              initialValues={initialValuesStep2}
-              validationSchema={validationSchemaStep2}
-              onSubmit={handleStep2Submit}
-            >
-              {({ setFieldValue, isSubmitting }) => (
-                <Form className="file-upload-form">
-                  <label htmlFor="file">File</label>
-                  <input
-                    name="file"
-                    type="file"
-                    id="file"
-                    onChange={(event) =>
-                      setFieldValue('file', event.currentTarget.files[0])
-                    }
-                  />
-                  <ErrorMessage
-                    name="file"
-                    component="div"
-                    className="error-message"
-                  />
-                  <button type="submit" disabled={isSubmitting}>
-                    Upload File
-                  </button>
-                </Form>
-              )}
-            </Formik>
+              <Formik
+                initialValues={initialValuesStep2}
+                validationSchema={validationSchemaStep2}
+                onSubmit={handleStep2Submit}
+              >
+                {({ setFieldValue, isSubmitting }) => (
+                  <Form className="file-upload-form">
+                    <label htmlFor="file">File</label>
+                    <input
+                      name="file"
+                      type="file"
+                      id="file"
+                      onChange={(event) =>
+                        setFieldValue('file', event.currentTarget.files[0])
+                      }
+                    />
+                    <ErrorMessage
+                      name="file"
+                      component="div"
+                      className="error-message"
+                    />
+                    <button type="submit" disabled={isSubmitting}>
+                      Upload File
+                    </button>
+                  </Form>
+                )}
+              </Formik>
+            </div>
           </div>
         </>
       )}

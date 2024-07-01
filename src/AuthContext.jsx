@@ -1,5 +1,5 @@
 // AuthContext.jsx
-import React, { createContext, useState, useContext } from 'react'
+import React, { createContext, useState, useContext, useCallback } from 'react'
 
 const AuthContext = createContext()
 
@@ -7,7 +7,7 @@ export const AuthProvider = ({ children }) => {
   const [userName, setUserName] = useState('')
   const [iconUrl, setIconUrl] = useState('')
 
-  const fetchUserData = async (authToken) => {
+  const fetchUserData = useCallback(async (authToken) => {
     try {
       const response = await fetch(
         'https://railway.bookreview.techtrain.dev/users',
@@ -25,16 +25,12 @@ export const AuthProvider = ({ children }) => {
         )
       }
       const userData = await response.json()
-      updateUserData(userData)
+      setUserName(userData.name)
+      setIconUrl(userData.iconUrl)
     } catch (error) {
       console.error('Error fetching user data:', error.message)
     }
-  }
-
-  const updateUserData = (userData) => {
-    setUserName(userData.name)
-    setIconUrl(userData.iconUrl)
-  }
+  }, [])
 
   return (
     <AuthContext.Provider
