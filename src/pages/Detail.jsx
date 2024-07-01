@@ -62,7 +62,6 @@ const Detail = () => {
         setReview(data)
 
         // ローディングUIが表示された後にログを記録する
-        console.log('aaa')
         logSelectBook()
       } catch (error) {
         console.error('Error fetching review:', error.message)
@@ -76,20 +75,52 @@ const Detail = () => {
   if (error) return <div>Error: {error}</div>
   if (!review) return <div>Loading...</div>
 
+  const handleEditClick = () => {
+    navigate(`/edit/${id}`)
+  }
+
+  const handleDeleteClick = async () => {
+    const authToken = Cookies.get('authToken')
+
+    try {
+      const response = await fetch(
+        `https://railway.bookreview.techtrain.dev/books/${id}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      )
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(
+          errorData.ErrorMessageJP || 'Network response was not ok'
+        )
+      }
+
+      console.log('Delete Review successful!')
+      navigate('/')
+    } catch (error) {
+      console.error('Error deleting review:', error.message)
+    }
+  }
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
       onClick={() => navigate('/')}
     >
       <div
-        className="bg-white rounded-lg shadow-lg w-full max-w-4xl p-6 md:p-8 overflow-y-auto"
+        className="ml-24 mr-0 w-full max-w-6xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="grid md:grid-cols-2 gap-6">
           <div>
             <h2 className="text-2xl font-bold mb-4">{review.title}</h2>
             <p className="mb-2">
-              <strong>URL:</strong>{' '}
+              <strong>URL = </strong>
               <a
                 href={review.url}
                 target="_blank"
@@ -100,16 +131,29 @@ const Detail = () => {
               </a>
             </p>
             <p className="mb-4">
-              <strong>Details:</strong> {review.detail}
+              <strong>Details = </strong> {review.detail}
             </p>
             <p className="mb-4">
-              <strong>Review:</strong> {review.review}
+              <strong>Review = </strong> {review.review}
             </p>
             <p className="mb-2">
-              <strong>Reviewer:</strong> {review.reviewer}
+              <strong>Reviewer = </strong> {review.reviewer}
             </p>
             {review.isMine && (
-              <p className="text-green-500">This is your review.</p>
+              <div className="flex justify-between w-64">
+                <p
+                  onClick={handleEditClick}
+                  className="text-green-500 hover:underline cursor-pointer"
+                >
+                  Edit this review
+                </p>
+                <p
+                  onClick={handleDeleteClick}
+                  className="text-red-500 hover:underline cursor-pointer"
+                >
+                  Delete this review
+                </p>
+              </div>
             )}
           </div>
         </div>

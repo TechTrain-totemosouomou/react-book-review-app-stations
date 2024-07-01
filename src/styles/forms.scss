@@ -1,0 +1,64 @@
+// forms.scss
+
+// 共通のフォームスタイル
+@mixin form-styles {
+  margin: 20px;
+  text-align: left;
+  max-width: 50%;
+
+  input[type='email'],
+  input[type='text'],
+  input[type='password'],
+  input[type='file'] {
+    height: 2.5rem;
+    margin-bottom: 20px;
+    width: 100%;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    padding-left: 12px;
+    padding-right: 12px;
+    background-color: rgba(200, 235, 235, 0.2);
+    font-size: 14px;
+    color: azure;
+  }
+
+  button {
+    margin-top: 10px;
+    padding: 12px 24px;
+    background-color: #4da5e0;
+    border: none;
+    border-radius: 8px;
+    color: azure;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  button:hover {
+    background-color: #4da5e0c2;
+  }
+
+  .error-message {
+    color: red;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+  }
+}
+
+// 特定のフォーム用の個別スタイル
+input[type='file'] {
+  padding-top: 6px;
+  font-size: 20px;
+}
+
+// ファイル名やルートに基づいてクラス名を生成する関数
+@function form-class($name) {
+  @return '.#{$name}-form';
+}
+
+// 名前に基づいてフォームスタイルを適用する
+@each $name in login, signup, profile, 'file-upload', new {
+  #{form-class($name)} {
+    @include form-styles;
+  }
+}
