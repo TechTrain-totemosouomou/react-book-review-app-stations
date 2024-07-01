@@ -64,19 +64,21 @@ export default function Home() {
           {books.map((book) => (
             <button
               key={book.id}
-              className="bg-white shadow-md rounded-lg overflow-hidden transition-shadow duration-300 ease-in-out hover:shadow-lg"
+              className="bg-pink-50 bg-opacity-80 shadow-md rounded-lg overflow-hidden transition-shadow duration-300 ease-in-out hover:shadow-lg h-40"
               onClick={() => handleReviewClick(book)}
             >
-              <div className="p-4">
-                <h2 className="text-lg font-medium mb-2">{book.title}</h2>
+              <div className="p-2">
+                <h2 className="text-2xl font-bold border-b border-gray-300 w-60 mx-auto">
+                  {book.title}
+                </h2>
                 <a
                   href={book.url}
-                  className="text-blue-600 hover:underline mb-2 block"
+                  className="text-xs hover:underline pt-1 block"
                 >
                   {book.url}
                 </a>
-                <p className="text-gray-600 mb-4">{book.detail}</p>
-                <p className="text-gray-600">
+                <p className="pb-1">{book.detail}</p>
+                <p className="p-2 border-l-2 border-gray-300">
                   "{book.review}" - {book.reviewer}
                 </p>
               </div>

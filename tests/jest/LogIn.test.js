@@ -10,6 +10,7 @@ import LogIn from '../../src/pages/LogIn.jsx'
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useNavigate: () => jest.fn(),
+  Link: ({ children, to }) => <a href={to}>{children}</a>,
 }))
 
 test('renders login button', () => {

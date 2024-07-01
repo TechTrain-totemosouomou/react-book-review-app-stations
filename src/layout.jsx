@@ -1,3 +1,4 @@
+// layout.jsx
 import React, { useEffect } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
@@ -18,7 +19,7 @@ const Layout = () => {
     ) {
       navigate('/login')
     }
-  }, [location])
+  }, [location, navigate])
 
   return (
     <AuthProvider>

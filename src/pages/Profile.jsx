@@ -1,3 +1,4 @@
+// Profile.jsx
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
@@ -5,7 +6,7 @@ import Compressor from 'compressorjs'
 import { Formik, Field, Form, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import { useAuth } from '../AuthContext.jsx' // useAuth フックをインポートする
-import './SignUp.css'
+import '../styles/forms.scss'
 
 const Profile = () => {
   const [step, setStep] = useState(1)
@@ -81,7 +82,7 @@ const Profile = () => {
               })
             }
 
-            console.log('File upload successful!')
+            console.log('File Upload successful!')
             navigate('/')
           })
           .catch((error) => {
@@ -99,82 +100,95 @@ const Profile = () => {
   }
 
   return (
-    <div className="App">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+      onClick={() => navigate('/')}
+    >
       {step === 1 ? (
         <>
-          <div className="App-header">
-            <h2>PROFILE EDIT 1/2</h2>
-          </div>
-          <div className="App-content">
-            <p>Update your name.</p>
+          <div
+            className="ml-24 mr-0 w-full max-w-6xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="grid md:grid-cols-2 gap-6">
+              <h2>PROFILE EDIT 1/2</h2>
+            </div>
+            <div className="App-content">
+              <p>Update your name.</p>
 
-            {error && <div className="error-message">{error}</div>}
+              {error && <div className="error-message">{error}</div>}
 
-            <Formik
-              initialValues={{ name: userName }}
-              validationSchema={validationSchemaStep1}
-              onSubmit={handleStep1Submit}
-              enableReinitialize
-            >
-              {({ isSubmitting }) => (
-                <Form className="signup-form">
-                  <label htmlFor="name">Name</label>
-                  <ErrorMessage
-                    name="name"
-                    component="div"
-                    className="error-message"
-                  />
-                  <Field
-                    name="name"
-                    type="text"
-                    id="name"
-                    placeholder="Your Name"
-                  />
-                  <button type="submit" disabled={isSubmitting}>
-                    Next
-                  </button>
-                </Form>
-              )}
-            </Formik>
+              <Formik
+                initialValues={{ name: userName }}
+                validationSchema={validationSchemaStep1}
+                onSubmit={handleStep1Submit}
+                enableReinitialize
+              >
+                {({ isSubmitting }) => (
+                  <Form className="profile-form">
+                    <label htmlFor="name">Name</label>
+                    <ErrorMessage
+                      name="name"
+                      component="div"
+                      className="error-message"
+                    />
+                    <Field
+                      name="name"
+                      type="text"
+                      id="name"
+                      placeholder="Your Name"
+                    />
+                    <button type="submit" disabled={isSubmitting}>
+                      Next
+                    </button>
+                  </Form>
+                )}
+              </Formik>
+            </div>
           </div>
         </>
       ) : (
         <>
-          <div className="App-header">
-            <h2>PROFILE EDIT 2/2</h2>
-          </div>
-          <div className="App-content">
-            <p>Upload a new icon image to update your profile.</p>
+          <div
+            className="ml-24 mr-0 w-full max-w-6xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="grid md:grid-cols-2 gap-6">
+              <h2>PROFILE EDIT 2/2</h2>
+            </div>
+            <div className="App-content">
+              <p>Upload a new icon image to update your profile.</p>
 
-            {error && <div className="error-message">{error}</div>}
+              {error && <div className="error-message">{error}</div>}
 
-            <Formik
-              initialValues={{ file: null }}
-              validationSchema={validationSchemaStep2}
-              onSubmit={handleStep2Submit}
-            >
-              {({ setFieldValue, isSubmitting }) => (
-                <Form className="file-upload-form">
-                  <label htmlFor="file">File</label>
-                  <input
-                    name="file"
-                    type="file"
-                    id="file"
-                    onChange={(event) =>
-                      setFieldValue('file', event.currentTarget.files[0])
-                    }
-                  />
-                  <ErrorMessage
-                    name="file"
-                    component="div"
-                    className="error-message"
-                  />
-                  <button type="submit" disabled={isSubmitting}>
-                    Upload File
-                  </button>
-                </Form>
-              )}
-            </Formik>
+              <Formik
+                initialValues={{ file: null }}
+                validationSchema={validationSchemaStep2}
+                onSubmit={handleStep2Submit}
+              >
+                {({ setFieldValue, isSubmitting }) => (
+                  <Form className="file-upload-form">
+                    <label htmlFor="file">File</label>
+                    <input
+                      name="file"
+                      type="file"
+                      id="file"
+                      onChange={(event) =>
+                        setFieldValue('file', event.currentTarget.files[0])
+                      }
+                    />
+                    <ErrorMessage
+                      name="file"
+                      component="div"
+                      className="error-message"
+                    />
+                    <button type="submit" disabled={isSubmitting}>
+                      Upload File
+                    </button>
+                  </Form>
+                )}
+              </Formik>
+            </div>
           </div>
         </>
       )}
